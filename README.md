@@ -13,7 +13,7 @@ The repository is organized as follows:
 
 ## Setup Instructions
 
-To get this project running locally, follow these steps ([(https://github.com/user-attachments/assets/ce91d9ba-4bda-4e78-a3d7-2cde4cae0c30)):
+To get this project running locally, follow these steps (Video Demo: https://github.com/user-attachments/assets/ce91d9ba-4bda-4e78-a3d7-2cde4cae0c30):
 
 
 
