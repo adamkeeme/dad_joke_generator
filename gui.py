@@ -57,12 +57,19 @@ def generate_joke_text(model, tokenizer, prompt=""):
     
     try:
         device = model.device
-        input_ids = tokenizer.encode(prompt, return_tensors="pt").to(device)
-        current_prompt_length = input_ids.shape[1] if prompt else 0
+
+        if prompt:
+            input_ids = tokenizer.encode(prompt, return_tensors="pt").to(device)
+        else:
+            # explicitly create a starting point for generation when no prompt is given
+            # this is crucial for getting different jokes on each run
+            input_ids = torch.tensor([[tokenizer.bos_token_id]], device=device)
+
+        current_prompt_length = input_ids.shape[1]
         
         logger.info(f"Generating joke. Prompt: '{prompt}'")
         output_sequences = model.generate(
-            input_ids=input_ids if prompt else None,
+            input_ids=input_ids,
             max_length=MAX_JOKE_LENGTH_GENERATION + current_prompt_length,
             temperature=GENERATION_TEMP,
             top_k=GENERATION_TOP_K,
@@ -71,22 +78,14 @@ def generate_joke_text(model, tokenizer, prompt=""):
             pad_token_id=tokenizer.pad_token_id,
             eos_token_id=tokenizer.eos_token_id,
             no_repeat_ngram_size=GENERATION_NO_REPEAT_NGRAM_SIZE,
+            do_sample=True # Explicitly ensuring sampling is on
         )
 
         if not output_sequences.tolist() or not output_sequences[0].tolist():
              logger.error("model.generate() returned empty sequence.")
              return "Could not generate (empty sequence from model)."
 
-        # debugging logs
-        raw_ids = output_sequences[0].tolist()
-        logger.info(f"Raw output token IDs: {raw_ids}")
-        decoded_raw_special = tokenizer.decode(output_sequences[0], skip_special_tokens=False)
-        logger.info(f"Decoded (with special tokens): '{decoded_raw_special}'")
-        decoded_skipped_special = tokenizer.decode(output_sequences[0], skip_special_tokens=True)
-        logger.info(f"Decoded (skip_special_tokens=True): '{decoded_skipped_special}'")
-
-
-        generated_text = decoded_skipped_special
+        generated_text = tokenizer.decode(output_sequences[0], skip_special_tokens=True)
         
         if prompt and generated_text.startswith(prompt):
             final_text = generated_text[len(prompt):].strip()

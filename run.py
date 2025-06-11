@@ -142,6 +142,7 @@ def train_model():
         optimizer, num_warmup_steps=num_warmup_steps, num_training_steps=num_training_steps
     )
 
+    # student model
     student_model.train()
     logger.info(f"Starting training for {NUM_EPOCHS} epochs...")
 
