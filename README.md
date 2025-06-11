@@ -13,7 +13,9 @@ The repository is organized as follows:
 
 ## Setup Instructions
 
-To get this project running locally, follow these steps:
+To get this project running locally, follow these steps ([[video demo](url)](https://github.com/user-attachments/assets/ce91d9ba-4bda-4e78-a3d7-2cde4cae0c30)):
+
+
 
 1.  **Clone the Repository**
 2.  **Install Dependencies**: Make sure you have Python 3.8+ installed. You can install the necessary packages using pip:
